@@ -1,4 +1,5 @@
 using ExchangeRateProvider.Api.Configuration;
+using ExchangeRateProvider.Api.Validators;
 using ExchangeRateProvider.Application;
 using ExchangeRateProvider.Infrastructure;
 using Scalar.AspNetCore;
@@ -10,6 +11,8 @@ builder.Logging.AddConsole();
 // Add services to the container.
 builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices();
+
+builder.Services.AddScoped<IQuoteCurrenciesValidator, QuoteCurrenciesValidator>();
 
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

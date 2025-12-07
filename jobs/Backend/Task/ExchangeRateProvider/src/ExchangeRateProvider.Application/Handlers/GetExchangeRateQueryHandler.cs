@@ -6,17 +6,21 @@ using ExchangeRateProvider.Domain.ValueObjects;
 
 namespace ExchangeRateProvider.Application.Handlers;
 
-public class GetExchangeRateQueryHandler(IExchangeRateService exchangeRateService) : IQueryHandler<GetExchangeRatesQuery, IList<ExchangeRateDto>>
+public class GetExchangeRateQueryHandler(IExchangeRateServiceFactory serviceFactory) : IQueryHandler<GetExchangeRatesQuery, IList<ExchangeRateDto>>
 {
     public async Task<IList<ExchangeRateDto>> HandleAsync(GetExchangeRatesQuery query, CancellationToken cancellationToken = default)
     {
-        var rates = await exchangeRateService.GetExchangeRatesAsync(
-            query.BaseCurrency,
-            cancellationToken);
+        var exchangeRateService = serviceFactory.GetService(query.BaseCurrency);
 
-        IEnumerable<ExchangeRate> filteredRates = query.QuoteCurrencies.Count > 0
-            ? rates.Where(r => query.QuoteCurrencies.Any(qc => qc.Code == r.QuoteCurrency.Code))
-            : rates;
+        var rates = await exchangeRateService.GetExchangeRatesAsync(query.BaseCurrency, cancellationToken);
+
+        IEnumerable<ExchangeRate> filteredRates = rates;
+
+        if (query.QuoteCurrencies is not null && query.QuoteCurrencies.Count > 0)
+        {
+            var quoteCodes = query.QuoteCurrencies.Select(c => c.Code).ToHashSet(StringComparer.OrdinalIgnoreCase);
+            filteredRates = rates.Where(r => quoteCodes.Contains(r.QuoteCurrency.Code));
+        }
 
         return filteredRates.Select(r => new ExchangeRateDto(r.BaseCurrency, r.QuoteCurrency, r.Rate)).ToList();
     }

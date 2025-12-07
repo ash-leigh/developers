@@ -4,5 +4,5 @@ namespace ExchangeRateProvider.Application.Queries;
 
 public record GetExchangeRatesQuery(
     Currency BaseCurrency,
-    List<Currency> QuoteCurrencies
+    List<Currency>? QuoteCurrencies = null
 );

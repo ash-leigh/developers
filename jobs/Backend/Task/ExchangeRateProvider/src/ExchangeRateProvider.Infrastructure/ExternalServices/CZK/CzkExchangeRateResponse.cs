@@ -1,12 +1,12 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ExchangeRateProvider.Infrastructure.ExternalServices;
+namespace ExchangeRateProvider.Infrastructure.ExternalServices.CZK;
 
-internal sealed record ExchangeRateResponse(
-    List<CnbRate> Rates
+internal sealed record CzkExchangeRateResponse(
+    List<CzkRate> Rates
 );
 
-internal sealed record CnbRate
+internal sealed record CzkRate
 {
     [JsonPropertyName("amount")]
     public required long Amount { get; init; }
