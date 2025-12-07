@@ -1,11 +1,14 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace ExchangeRateProvider.Infrastructure.ExternalServices.CZK;
 
+[ExcludeFromCodeCoverage(Justification = "External API response DTO with only JSON serialization attributes - no business logic")]
 internal sealed record CzkExchangeRateResponse(
     List<CzkRate> Rates
 );
 
+[ExcludeFromCodeCoverage(Justification = "External API response DTO with only JSON serialization attributes - no business logic")]
 internal sealed record CzkRate
 {
     [JsonPropertyName("amount")]

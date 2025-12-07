@@ -3,9 +3,11 @@ using ExchangeRateProvider.Domain.Interfaces;
 using ExchangeRateProvider.Infrastructure.ExternalServices.CZK;
 using ExchangeRateProvider.Infrastructure.Factories;
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ExchangeRateProvider.Infrastructure;
 
+[ExcludeFromCodeCoverage(Justification = "Dependency injection configuration - no testable logic, verified through integration tests")]
 public static class ServiceRegistration
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)

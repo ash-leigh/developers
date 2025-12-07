@@ -1,5 +1,8 @@
-﻿namespace ExchangeRateProvider.Api.Constants;
+﻿using System.Diagnostics.CodeAnalysis;
 
+namespace ExchangeRateProvider.Api.Constants;
+
+[ExcludeFromCodeCoverage(Justification = "Constants class with only compile-time string values - no executable logic")]
 public static class ApiEndpoints
 {
     public const string ApiVersion = "v1";

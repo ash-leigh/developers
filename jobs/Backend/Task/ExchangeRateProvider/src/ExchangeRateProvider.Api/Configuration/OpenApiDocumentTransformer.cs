@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi;
+using System.Diagnostics.CodeAnalysis;
 
 namespace ExchangeRateProvider.Api.Configuration
 {
+    [ExcludeFromCodeCoverage(Justification = "OpenAPI configuration with only metadata assignment - no testable logic")]
     public class OpenApiDocumentTransformer : IOpenApiDocumentTransformer
     {
         public Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)

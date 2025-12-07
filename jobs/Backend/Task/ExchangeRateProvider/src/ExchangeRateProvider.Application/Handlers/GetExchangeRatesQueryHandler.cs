@@ -6,7 +6,7 @@ using ExchangeRateProvider.Domain.ValueObjects;
 
 namespace ExchangeRateProvider.Application.Handlers;
 
-public class GetExchangeRateQueryHandler(IExchangeRateServiceFactory serviceFactory) : IQueryHandler<GetExchangeRatesQuery, IList<ExchangeRateDto>>
+public class GetExchangeRatesQueryHandler(IExchangeRateServiceFactory serviceFactory) : IQueryHandler<GetExchangeRatesQuery, IList<ExchangeRateDto>>
 {
     public async Task<IList<ExchangeRateDto>> HandleAsync(GetExchangeRatesQuery query, CancellationToken cancellationToken = default)
     {
