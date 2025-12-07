@@ -10,6 +10,8 @@ public class CzkExchangeRateService(HttpClient httpClient, ILogger<CzkExchangeRa
     public async Task<IList<ExchangeRate>>GetExchangeRatesAsync(Currency baseCurrency, CancellationToken cancellationToken = default)
     {
         var response = await httpClient.GetAsync(new Uri("https://api.cnb.cz/cnbapi/exrates/daily?lang=EN"), cancellationToken);
+        response.EnsureSuccessStatusCode();
+        
         await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
         var root = await JsonSerializer.DeserializeAsync<CzkExchangeRateResponse>(stream, new JsonSerializerOptions() { PropertyNameCaseInsensitive = true }, cancellationToken).ConfigureAwait(false);
         var list = root?.Rates ?? new List<CzkRate>();
