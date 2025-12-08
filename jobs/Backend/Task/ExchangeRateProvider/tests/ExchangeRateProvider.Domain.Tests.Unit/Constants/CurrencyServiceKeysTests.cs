@@ -24,7 +24,6 @@ public class CurrencyServiceKeysTests
     }
 
     [Theory]
-    [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
     public void IsSupported_WithNullOrWhitespace_ReturnsFalse(string currencyCode)

@@ -68,7 +68,7 @@ public class ExchangeRateControllerTests
         A.CallTo(() => _fakeHandler.HandleAsync(
             A<GetExchangeRatesQuery>.That.Matches(q =>
                 q.BaseCurrency.Code == baseCurrency &&
-                q.QuoteCurrencies.Count == 2 &&
+                q.QuoteCurrencies!.Count == 2 &&
                 q.QuoteCurrencies.Any(c => c.Code == "EUR") &&
                 q.QuoteCurrencies.Any(c => c.Code == "GBP")),
             A<CancellationToken>._))
@@ -84,8 +84,8 @@ public class ExchangeRateControllerTests
 
         A.CallTo(() => _fakeHandler.HandleAsync(
             A<GetExchangeRatesQuery>.That.Matches(q =>
-                q.QuoteCurrencies.Any(c => c.Code == "EUR") &&
-                q.QuoteCurrencies.Any(c => c.Code == "GBP")),
+                q.QuoteCurrencies!.Any(c => c.Code == "EUR") &&
+                q.QuoteCurrencies!.Any(c => c.Code == "GBP")),
             A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
     }
@@ -161,8 +161,8 @@ public class ExchangeRateControllerTests
 
         var problemDetails = badRequestResult.Value.ShouldBeOfType<ProblemDetails>();
         problemDetails.Title.ShouldBe("Unsupported base currency");
-        problemDetails.Detail.ShouldContain($"The currency '{unsupportedCurrency}' is not supported");
-        problemDetails.Detail.ShouldContain("Supported currencies:");
+        problemDetails.Detail!.ShouldContain($"The currency '{unsupportedCurrency}' is not supported");
+        problemDetails.Detail!.ShouldContain("Supported currencies:");
         problemDetails.Status.ShouldBe(StatusCodes.Status400BadRequest);
 
         A.CallTo(() => _fakeHandler.HandleAsync(A<GetExchangeRatesQuery>._, A<CancellationToken>._))
@@ -206,7 +206,7 @@ public class ExchangeRateControllerTests
         A.CallTo(() => _fakeHandler.HandleAsync(
             A<GetExchangeRatesQuery>.That.Matches(q =>
                 q.BaseCurrency.Code == baseCurrency &&
-                q.QuoteCurrencies.Count == 2),
+                q.QuoteCurrencies!.Count == 2),
             A<CancellationToken>._))
             .Returns(expectedRates);
 
@@ -218,7 +218,7 @@ public class ExchangeRateControllerTests
 
         A.CallTo(() => _fakeHandler.HandleAsync(
             A<GetExchangeRatesQuery>.That.Matches(q =>
-                q.QuoteCurrencies.Count == 2 &&
+                q.QuoteCurrencies!.Count == 2 &&
                 q.QuoteCurrencies.All(c => !string.IsNullOrWhiteSpace(c.Code))),
             A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
@@ -277,8 +277,8 @@ public class ExchangeRateControllerTests
 
         A.CallTo(() => _fakeHandler.HandleAsync(
             A<GetExchangeRatesQuery>.That.Matches(q =>
-                q.QuoteCurrencies.Any(c => c.Code == "EUR") &&
-                q.QuoteCurrencies.Any(c => c.Code == "GBP")),
+                q.QuoteCurrencies!.Any(c => c.Code == "EUR") &&
+                q.QuoteCurrencies!.Any(c => c.Code == "GBP")),
             A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
     }
@@ -328,7 +328,7 @@ public class ExchangeRateControllerTests
         result.Result.ShouldBeOfType<OkObjectResult>();
 
         A.CallTo(() => _fakeHandler.HandleAsync(
-            A<GetExchangeRatesQuery>.That.Matches(q => q.QuoteCurrencies.Count == 4),
+            A<GetExchangeRatesQuery>.That.Matches(q => q.QuoteCurrencies!.Count == 4),
             A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
     }
@@ -357,7 +357,7 @@ public class ExchangeRateControllerTests
 
         A.CallTo(() => _fakeHandler.HandleAsync(
             A<GetExchangeRatesQuery>.That.Matches(q =>
-                q.QuoteCurrencies.Count == 3 &&
+                q.QuoteCurrencies!.Count == 3 &&
                 q.QuoteCurrencies.All(c => c.Code == c.Code.ToUpperInvariant())),
             A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();

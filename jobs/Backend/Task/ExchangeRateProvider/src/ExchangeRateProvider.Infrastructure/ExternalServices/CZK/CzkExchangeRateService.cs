@@ -9,6 +9,8 @@ public class CzkExchangeRateService(HttpClient httpClient, ILogger<CzkExchangeRa
 {
     public async Task<IList<ExchangeRate>>GetExchangeRatesAsync(Currency baseCurrency, CancellationToken cancellationToken = default)
     {
+        logger.LogInformation("Fetching CZK exchange rates from external service.");
+
         var response = await httpClient.GetAsync(new Uri("https://api.cnb.cz/cnbapi/exrates/daily?lang=EN"), cancellationToken);
         response.EnsureSuccessStatusCode();
         

@@ -29,6 +29,9 @@ namespace ExchangeRateProvider.Api.Controllers
             [FromQuery] List<string>? quoteCurrencies,
             CancellationToken cancellationToken = default)
         {
+            logger.LogInformation("Received request to get exchange rates. BaseCurrency: {BaseCurrency}, QuoteCurrencies: {QuoteCurrencies}",
+                baseCurrency, quoteCurrencies is not null ? string.Join(", ", quoteCurrencies) : "null");
+
             if (string.IsNullOrWhiteSpace(baseCurrency))
             {
                 return BadRequest(new ProblemDetails
