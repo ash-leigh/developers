@@ -8,13 +8,13 @@ The solution follows **Clean Architecture** with clear separation of concerns:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│                    Presentation Layer                   │
+│                 Presentation Layer                      │
 │              ExchangeRateProvider.Api                   │
 │        (Controllers, Validators, OpenAPI Config)        │
 └────────────────────┬────────────────────────────────────┘
                      │
 ┌────────────────────▼────────────────────────────────────┐
-│                  Application Layer                      │
+│                Application Layer                        │
 │           ExchangeRateProvider.Application              │
 │          (Handlers, Queries, DTOs, CQRS)                │
 └────────────────────┬────────────────────────────────────┘
@@ -47,9 +47,6 @@ dotnet restore
 
 # Build all projects
 dotnet build
-
-# Build in Release mode
-dotnet build -c Release
 ```
 
 ### Running Locally
@@ -69,9 +66,6 @@ dotnet run
 ```bash
 # Run all tests
 dotnet test
-
-# Run tests with coverage
-dotnet test"
 ```
 
 ## Docker
@@ -109,7 +103,7 @@ http://localhost:8080/scalar/v1
 
 #### Get Exchange Rates
 
-**Endpoint**: `GET /api/exchangerates`
+**Endpoint**: `GET v1/api/exchangerates`
 
 **Query Parameters**:
 - `baseCurrency` (required): The base currency code (e.g., "CZK")
@@ -119,10 +113,10 @@ http://localhost:8080/scalar/v1
 
 ```bash
 # Get all available exchange rates for CZK
-curl "http://localhost:8080/api/exchangerates?baseCurrency=CZK"
+curl "http://localhost:8080/v1/api/exchangerates?baseCurrency=CZK"
 
 # Get specific quote currencies
-curl "http://localhost:8080/api/exchangerates?baseCurrency=CZK&quoteCurrencies=EUR&quoteCurrencies=USD&quoteCurrencies=GBP"
+curl "http://localhost:8080/v1/api/exchangerates?baseCurrency=CZK&quoteCurrencies=EUR&quoteCurrencies=USD&quoteCurrencies=GBP"
 ```
 
 **Example Response** (200 OK):
