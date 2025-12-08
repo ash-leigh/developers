@@ -3,6 +3,7 @@ using ExchangeRateProvider.Domain.Interfaces;
 using ExchangeRateProvider.Infrastructure.ExternalServices.CZK;
 using ExchangeRateProvider.Infrastructure.Factories;
 using ExchangeRateProvider.Infrastructure.Policies;
+using LazyCache;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics.CodeAnalysis;
 
@@ -18,6 +19,8 @@ public static class ServiceRegistration
 
         services.AddTransient<ICzkApiClient, CzkApiClient>();
         services.AddTransient<ICzkExchangeRateMapper, CzkExchangeRateMapper>();
+
+        services.AddLazyCache();
 
         ConfigurePolicyRegistry(services);
         ConfigureHttpClients(services);

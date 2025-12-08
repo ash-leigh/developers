@@ -1,6 +1,7 @@
 ﻿using ExchangeRateProvider.Domain.ValueObjects;
 using ExchangeRateProvider.Infrastructure.ExternalServices.CZK;
 using ExchangeRateProvider.Infrastructure.Policies;
+using LazyCache;
 using Microsoft.Extensions.Logging.Abstractions;
 using Polly.Registry;
 using Shouldly;
@@ -20,10 +21,11 @@ public class CzkExchangeRateServiceIntegrationTests
         };
 
         var policyRegistry = new PolicyRegistry().AddBasicRetryPolicy();
+        var cache = new CachingService();
         var apiClientLogger = NullLogger<CzkApiClient>.Instance;
         var mapperLogger = NullLogger<CzkExchangeRateMapper>.Instance;
 
-        var apiClient = new CzkApiClient(httpClient, policyRegistry, apiClientLogger);
+        var apiClient = new CzkApiClient(httpClient, policyRegistry, cache, apiClientLogger);
         var mapper = new CzkExchangeRateMapper(mapperLogger);
         var service = new CzkExchangeRateService(apiClient, mapper);
 

@@ -1,4 +1,5 @@
 using ExchangeRateProvider.Infrastructure.Policies;
+using LazyCache;
 using Microsoft.Extensions.Logging;
 using Polly;
 using Polly.Registry;
@@ -6,11 +7,25 @@ using System.Text.Json;
 
 namespace ExchangeRateProvider.Infrastructure.ExternalServices.CZK;
 
-public class CzkApiClient(HttpClient httpClient, IReadOnlyPolicyRegistry<string> policyRegistry, ILogger<CzkApiClient> logger) : ICzkApiClient
+public class CzkApiClient(
+    HttpClient httpClient,
+    IReadOnlyPolicyRegistry<string> policyRegistry,
+    IAppCache cache,
+    ILogger<CzkApiClient> logger) : ICzkApiClient
 {
     private const string ApiEndpoint = "https://api.cnb.cz/cnbapi/exrates/daily?lang=EN";
+    private const string CacheKey = "CzkExchangeRates";
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(6);
 
     public async Task<CzkExchangeRateResponse?> GetExchangeRatesAsync(CancellationToken cancellationToken = default)
+    {
+        return await cache.GetOrAddAsync(
+            CacheKey,
+            async () => await FetchFromApiAsync(cancellationToken),
+            CacheDuration);
+    }
+
+    private async Task<CzkExchangeRateResponse?> FetchFromApiAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching exchange rates from CNB API");
 
@@ -34,7 +49,7 @@ public class CzkApiClient(HttpClient httpClient, IReadOnlyPolicyRegistry<string>
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true }, 
             cancellationToken).ConfigureAwait(false);
 
-        logger.LogInformation("Successfully fetched exchange rates from CNB API");
+        logger.LogInformation("Successfully fetched and cached exchange rates from CNB API");
 
         return result;
     }
