@@ -19,9 +19,13 @@ public class CzkExchangeRateServiceIntegrationTests
             Timeout = TimeSpan.FromSeconds(30)
         };
 
-        var logger = NullLogger<CzkExchangeRateService>.Instance;
         var policyRegistry = new PolicyRegistry().AddBasicRetryPolicy();
-        var service = new CzkExchangeRateService(httpClient, policyRegistry, logger);
+        var apiClientLogger = NullLogger<CzkApiClient>.Instance;
+        var mapperLogger = NullLogger<CzkExchangeRateMapper>.Instance;
+
+        var apiClient = new CzkApiClient(httpClient, policyRegistry, apiClientLogger);
+        var mapper = new CzkExchangeRateMapper(mapperLogger);
+        var service = new CzkExchangeRateService(apiClient, mapper);
 
         // Act
         var rates = await service.GetExchangeRatesAsync(new Currency("CZK"), CancellationToken.None);
