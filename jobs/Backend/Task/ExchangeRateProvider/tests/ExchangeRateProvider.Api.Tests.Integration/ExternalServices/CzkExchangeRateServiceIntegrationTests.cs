@@ -1,6 +1,8 @@
 ﻿using ExchangeRateProvider.Domain.ValueObjects;
 using ExchangeRateProvider.Infrastructure.ExternalServices.CZK;
+using ExchangeRateProvider.Infrastructure.Policies;
 using Microsoft.Extensions.Logging.Abstractions;
+using Polly.Registry;
 using Shouldly;
 
 namespace ExchangeRateProvider.Api.Tests.Integration.ExternalServices;
@@ -16,8 +18,10 @@ public class CzkExchangeRateServiceIntegrationTests
             BaseAddress = new Uri("https://api.cnb.cz"),
             Timeout = TimeSpan.FromSeconds(30)
         };
+
         var logger = NullLogger<CzkExchangeRateService>.Instance;
-        var service = new CzkExchangeRateService(httpClient, logger);
+        var policyRegistry = new PolicyRegistry().AddBasicRetryPolicy();
+        var service = new CzkExchangeRateService(httpClient, policyRegistry, logger);
 
         // Act
         var rates = await service.GetExchangeRatesAsync(new Currency("CZK"), CancellationToken.None);
