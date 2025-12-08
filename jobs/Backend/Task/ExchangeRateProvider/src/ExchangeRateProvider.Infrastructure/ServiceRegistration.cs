@@ -16,6 +16,9 @@ public static class ServiceRegistration
         services.AddSingleton<IExchangeRateServiceFactory, ExchangeRateServiceFactory>();
         services.AddKeyedTransient<IExchangeRateService, CzkExchangeRateService>(CurrencyServiceKeys.CZK);
 
+        services.AddTransient<ICzkApiClient, CzkApiClient>();
+        services.AddTransient<ICzkExchangeRateMapper, CzkExchangeRateMapper>();
+
         ConfigurePolicyRegistry(services);
         ConfigureHttpClients(services);
 
@@ -30,7 +33,7 @@ public static class ServiceRegistration
 
     private static void ConfigureHttpClients(IServiceCollection services)
     {
-        services.AddHttpClient<CzkExchangeRateService>(client =>
+        services.AddHttpClient<CzkApiClient>(client =>
         {
             client.BaseAddress = new Uri("https://api.cnb.cz");
             client.Timeout = TimeSpan.FromSeconds(30);

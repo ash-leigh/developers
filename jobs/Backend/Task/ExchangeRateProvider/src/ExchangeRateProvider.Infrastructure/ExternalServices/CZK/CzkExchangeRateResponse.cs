@@ -4,12 +4,12 @@ using System.Text.Json.Serialization;
 namespace ExchangeRateProvider.Infrastructure.ExternalServices.CZK;
 
 [ExcludeFromCodeCoverage(Justification = "External API response DTO with only JSON serialization attributes - no business logic")]
-internal sealed record CzkExchangeRateResponse(
+public record CzkExchangeRateResponse(
     List<CzkRate> Rates
 );
 
 [ExcludeFromCodeCoverage(Justification = "External API response DTO with only JSON serialization attributes - no business logic")]
-internal sealed record CzkRate
+public record CzkRate
 {
     [JsonPropertyName("amount")]
     public required long Amount { get; init; }
