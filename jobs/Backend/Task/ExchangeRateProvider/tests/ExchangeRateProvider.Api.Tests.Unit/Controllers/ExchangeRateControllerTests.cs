@@ -8,6 +8,7 @@ using FakeItEasy;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Testing;
 using Shouldly;
 
 namespace ExchangeRateProvider.Api.Tests.Unit.Controllers;
@@ -15,16 +16,16 @@ namespace ExchangeRateProvider.Api.Tests.Unit.Controllers;
 public class ExchangeRateControllerTests
 {
     private readonly IQueryHandler<GetExchangeRatesQuery, IList<ExchangeRateDto>> _fakeHandler;
-    private readonly ILogger<ExchangeRateController> _fakeLogger;
+    private readonly FakeLogger<ExchangeRateController> _logger;
     private readonly ExchangeRateController _controller;
     private readonly QuoteCurrenciesValidator _validator;
 
     public ExchangeRateControllerTests()
     {
         _fakeHandler = A.Fake<IQueryHandler<GetExchangeRatesQuery, IList<ExchangeRateDto>>>();
-        _fakeLogger = A.Fake<ILogger<ExchangeRateController>>();
+        _logger = new FakeLogger<ExchangeRateController>();
         _validator = new QuoteCurrenciesValidator();
-        _controller = new ExchangeRateController(_fakeHandler, _validator, _fakeLogger);
+        _controller = new ExchangeRateController(_fakeHandler, _validator, _logger);
     }
 
     [Theory]
@@ -51,6 +52,11 @@ public class ExchangeRateControllerTests
         var okResult = (OkObjectResult)result.Result;
         okResult.StatusCode.ShouldBe(StatusCodes.Status200OK);
         okResult.Value.ShouldBe(expectedRates);
+        
+        var logEntry = _logger.Collector.GetSnapshot().Single();
+        logEntry.Level.ShouldBe(LogLevel.Information);
+        logEntry.Message.ShouldContain($"BaseCurrency: {baseCurrency}");
+        logEntry.Message.ShouldContain("QuoteCurrencies: null");
     }
 
     [Theory]
@@ -88,6 +94,11 @@ public class ExchangeRateControllerTests
                 q.QuoteCurrencies!.Any(c => c.Code == "GBP")),
             A<CancellationToken>._))
             .MustHaveHappenedOnceExactly();
+        
+        var logEntry = _logger.Collector.GetSnapshot().Single();
+        logEntry.Level.ShouldBe(LogLevel.Information);
+        logEntry.Message.ShouldContain($"BaseCurrency: {baseCurrency}");
+        logEntry.Message.ShouldContain("QuoteCurrencies: EUR, GBP");
     }
 
     [Fact]
@@ -108,6 +119,10 @@ public class ExchangeRateControllerTests
 
         A.CallTo(() => _fakeHandler.HandleAsync(A<GetExchangeRatesQuery>._, A<CancellationToken>._))
             .MustNotHaveHappened();
+        
+        var logEntry = _logger.Collector.GetSnapshot().Single();
+        logEntry.Level.ShouldBe(LogLevel.Information);
+        logEntry.Message.ShouldContain("BaseCurrency: ");
     }
 
     [Fact]
