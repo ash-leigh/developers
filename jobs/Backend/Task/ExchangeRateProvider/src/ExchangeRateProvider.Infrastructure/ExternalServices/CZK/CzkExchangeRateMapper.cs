@@ -17,7 +17,7 @@ public class CzkExchangeRateMapper(ILogger<CzkExchangeRateMapper> logger) : ICzk
             .Select(rate => new ExchangeRate(
                 baseCurrency,
                 new Currency(rate.CurrencyCode),
-                rate.Amount / rate.Rate))
+                rate.Rate / rate.Amount))
             .ToList();
 
         logger.LogInformation("Mapped {Count} exchange rates from CNB response", exchangeRates.Count);

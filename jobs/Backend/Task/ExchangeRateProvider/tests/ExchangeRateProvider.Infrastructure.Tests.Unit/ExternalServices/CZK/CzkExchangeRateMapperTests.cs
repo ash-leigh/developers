@@ -36,7 +36,7 @@ public class CzkExchangeRateMapperTests
         result.Count.ShouldBe(2);
         result[0].BaseCurrency.Code.ShouldBe("CZK");
         result[0].QuoteCurrency.Code.ShouldBe("USD");
-        result[0].Rate.ShouldBe(1m / 23.5m);
+        result[0].Rate.ShouldBe(23.5m / 1m);
         
         var logEntry = _logger.Collector.GetSnapshot().Single();
         logEntry.Level.ShouldBe(LogLevel.Information);
