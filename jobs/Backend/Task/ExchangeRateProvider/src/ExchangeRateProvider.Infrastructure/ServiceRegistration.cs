@@ -36,10 +36,6 @@ public static class ServiceRegistration
 
     private static void ConfigureHttpClients(IServiceCollection services)
     {
-        services.AddHttpClient<CzkApiClient>(client =>
-        {
-            client.BaseAddress = new Uri("https://api.cnb.cz");
-            client.Timeout = TimeSpan.FromSeconds(30);
-        });
+        services.AddHttpClient<ICzkApiClient, CzkApiClient>();
     }
 }

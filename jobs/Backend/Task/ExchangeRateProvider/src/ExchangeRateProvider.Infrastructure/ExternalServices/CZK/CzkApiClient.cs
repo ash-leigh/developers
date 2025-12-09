@@ -15,7 +15,7 @@ public class CzkApiClient(
 {
     private const string ApiEndpoint = "https://api.cnb.cz/cnbapi/exrates/daily?lang=EN";
     private const string CacheKey = "CzkExchangeRates";
-    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(6);
+    private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(1);
 
     public async Task<CzkExchangeRateResponse?> GetExchangeRatesAsync(CancellationToken cancellationToken = default)
     {
