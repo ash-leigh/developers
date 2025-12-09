@@ -91,19 +91,14 @@ docker run -p 8080:8080 --name exchange-rate-api exchange-rate-provider-api
 When running in **Development** mode, interactive API documentation is available via **Scalar**:
 
 ```
-http://localhost:5291/scalar/v1
-```
-
-Or when running in Docker:
-```
-http://localhost:8080/scalar/v1
+https://localhost:5291/scalar/v1
 ```
 
 ### API Endpoints
 
 #### Get Exchange Rates
 
-**Endpoint**: `GET v1/api/exchangerates`
+**Endpoint**: `GET v1/api/exchange-rates`
 
 **Query Parameters**:
 - `baseCurrency` (required): The base currency code (e.g., "CZK")
